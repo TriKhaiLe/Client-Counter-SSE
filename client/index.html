@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSE Demo</title>
+</head>
+<body>
+  <h1>Server-Sent Events Demo</h1>
+  <p><strong>Server Time:</strong> <span id="server-time">Loading...</span></p>
+  <p><strong>Active Connections:</strong> <span id="connections">Loading...</span></p>
+
+  <script>
+    // Establish an EventSource connection
+    const eventSource = new EventSource('http://localhost:3002/api/events');
+
+    // Handle incoming messages
+    eventSource.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+
+      // Update UI with server data
+      document.getElementById('server-time').textContent = data.time;
+      document.getElementById('connections').textContent = data.connections;
+    };
+
+    // Handle errors
+    eventSource.onerror = (error) => {
+      console.error('EventSource failed:', error);
+      eventSource.close();
+    };
+  </script>
+</body>
+</html>
